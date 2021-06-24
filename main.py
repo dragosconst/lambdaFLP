@@ -26,7 +26,7 @@ envs = [] # foloseste o stiva de environments pentru a tine cont de paranteze
 will_ad_leg = False
 index = 1
 for char in expr:
-    if char == "l":
+    if char == "l": # urmeaza o variabila de legatura
         will_ad_leg = True
     elif char == "(": # cand dau de o paranteza, pun un nou env, momentan identic cu cel curent, pe stiva
         if envs != []:
