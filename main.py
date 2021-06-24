@@ -1,4 +1,3 @@
-import re
 import sys
 import copy
 
@@ -18,22 +17,24 @@ class Env:
         self.cr_vars = cr_vars
 
 expr = input("Scrie expresia, respectand regulile de formatare")
-vars_raw =re.findall("l(.)\.", expr)
 LEGATURA = 0
 LIBERA = 1
 LEGATA = 2
 
 vars = []
-envs = []
+envs = [] # foloseste o stiva de environments pentru a tine cont de paranteze
 will_ad_leg = False
 index = 1
 for char in expr:
     if char == "l":
         will_ad_leg = True
-    elif char == "(":
-        cr_env = envs[-1]
-        envs += [Env(copy.deepcopy(cr_env.cr_vars))]
-    elif char == ")":
+    elif char == "(": # cand dau de o paranteza, pun un nou env, momentan identic cu cel curent, pe stiva
+        if envs != []:
+            cr_env = envs[-1]
+            envs += [Env(copy.deepcopy(cr_env.cr_vars))]
+        else:
+            envs += [Env([])] # cazuri de genul (x + y) lx. x
+    elif char == ")": # cand dau de o paranteza inchisa, scot ultimul env din stiva
         if envs == []:
             print("Input invalid - paranteza ) in plus!")
             sys.exit()
@@ -43,7 +44,7 @@ for char in expr:
         # e variabila de legatura
         if will_ad_leg == True:
             vars += [(char, index, LEGATURA, None)]
-            cr_vars = envs[-1].cr_vars if envs != [] else []
+            cr_vars = envs[-1].cr_vars if envs != [] else [] # ma uit in env sa vad daca "suprascrie" o alta variabila de legatura
             found_it = False
             for (lchar, lindex) in cr_vars:
                 if lchar == char:
@@ -51,18 +52,18 @@ for char in expr:
                     cr_vars += [(char, index)]
                     found_it = True
                     break
-            if not found_it:
+            if not found_it: # daca nu poate fi pusa alta variabila, o adaug ca atare in env curent
                 cr_vars += [(char, index)]
             if envs != []:
                 envs[-1].cr_vars = cr_vars # posibil inutil, nu s sigur cum paseaza python listele
             else:
-                envs += [Env(copy.deepcopy(cr_vars))]
+                envs += [Env(copy.deepcopy(cr_vars))] # prima variabila de legatura intalnita
             will_ad_leg = False
         else:
             # e ori libera, ori legata
             found_it = False
             cr_vars = envs[-1].cr_vars if envs != [] else []
-            for (lchar, lindex) in cr_vars:
+            for (lchar, lindex) in cr_vars: # cr_vars sunt variabilele de legatura curente
                 if lchar == char:
                     vars += [(char, index, LEGATA, lindex)]
                     found_it = True
