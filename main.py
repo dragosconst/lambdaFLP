@@ -4,8 +4,8 @@ import copy
 """"
 Lambda expresiile vor fi codificate cu urm simboluri:
 lx. = lambda x. din notatie (l e rezervat, nu poate aparea ll.), nu e obligatoriu spatiu dupa punct
-) ( = spatiu intre paranteze = aplicare de functie
-+ - / * = simboluri uzuale de functii, spatiu intre variabile = inmultire de variabile sau ceva
+) ( = spatiu intre paranteze inseamna aplicare de functie
++ - / * = simboluri uzuale in functii, spatiu intre variabile e inmultire de variabile sau ceva
 exemplul din model:
 lx.(ly.(lx.x + z) ((lx.x x) (x + y) + x)) (lz. x y z)
 Exista exception handling, dar foarte limitat (chestii de genu lx. x )) crapa).
